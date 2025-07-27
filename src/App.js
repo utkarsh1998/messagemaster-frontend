@@ -22,7 +22,8 @@ import TicketsPage from "./pages/TicketsPage";
 import AdminAnnouncementsPage from "./pages/AdminAnnouncementsPage";
 import AnnouncementsHistoryPage from "./pages/AnnouncementsHistoryPage";
 import WhitelabelPage from "./pages/WhitelabelPage";
-import BackupPage from "./pages/BackupPage"; // ✅ Import the new page
+import BackupPage from "./pages/BackupPage";
+import StoragePage from "./pages/StoragePage"; // ✅ Import the new page
 
 /**
  * A helper component to redirect the user to their correct dashboard
@@ -96,7 +97,8 @@ function App() {
           <Route path="credits" element={<ProtectedRoute allowedRoles={["Admin"]}><CreditsPage currentUser={getCurrentUser()} /></ProtectedRoute>} />
           <Route path="reports" element={<ProtectedRoute allowedRoles={["Admin"]}><ReportsPage currentUser={getCurrentUser()} /></ProtectedRoute>} />
           <Route path="admin-announcements" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAnnouncementsPage /></ProtectedRoute>} />
-          <Route path="backup" element={<ProtectedRoute allowedRoles={["Admin"]}><BackupPage /></ProtectedRoute>} /> {/* ✅ NEW */}
+          <Route path="backup" element={<ProtectedRoute allowedRoles={["Admin"]}><BackupPage /></ProtectedRoute>} />
+          <Route path="storage" element={<ProtectedRoute allowedRoles={["Admin"]}><StoragePage /></ProtectedRoute>} /> {/* ✅ NEW */}
         </Route>
 
         {/* Fallback route for any other path */}
