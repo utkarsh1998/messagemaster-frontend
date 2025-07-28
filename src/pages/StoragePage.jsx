@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Card, Button, Spinner, Alert, Form, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 // Helper function to get authorization headers
 const getAuthHeaders = () => {
@@ -13,6 +14,7 @@ const StoragePage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [storageData, setStorageData] = useState(null);
+  const navigate = useNavigate();
 
   // State for the cleanup form
   const [cleanupForm, setCleanupForm] = useState({
@@ -26,14 +28,30 @@ const StoragePage = () => {
     setError('');
     try {
       const config = getAuthHeaders();
+      // ✅ FIX: Ensure the request is not sent if the user is not logged in
+      if (!config.headers) {
+          setError("Authentication error. Please log in again.");
+          setLoading(false);
+          setTimeout(() => navigate("/login"), 2000);
+          return;
+      }
       const { data } = await axios.get('http://localhost:5001/api/admin/storage-usage', config);
       setStorageData(data);
     } catch (err) {
-      setError('Failed to load storage usage data.');
+      // ✅ FIX: Add specific error handling for authentication issues
+      if (err.response && err.response.status === 401) {
+          setError("Your session has expired. Please log in again.");
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setTimeout(() => navigate("/login"), 2000);
+      } else {
+         setError('Failed to load storage usage data.');
+      }
+      console.error("Error fetching storage data:", err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     fetchStorageUsage();
